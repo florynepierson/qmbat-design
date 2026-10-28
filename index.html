@@ -246,19 +246,19 @@ section{padding:120px 64px;position:relative;z-index:1;}
 
 /* Ajuster l'affichage du comparateur dans la modale */
 .lb-ba-inner {
-  width: 85vw;
-  max-width: 700px;
-  max-height: 75vh;
+  width: 90vw;
+  max-width: 900px;
+  max-height: 80vh;
   margin: auto;
 }
 
 .lb-ba-inner .ba-wrap {
-  width: 100%;
-  max-width: 700px;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
   position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: ew-resize;
+  user-select: none;
 }
 
 .lb-ba-inner .ba-after,
@@ -267,11 +267,16 @@ section{padding:120px 64px;position:relative;z-index:1;}
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
 }
 
+.lb-ba-inner .ba-before-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
 
 
 /* GALERIE SIMPLE — dimensions naturelles */
