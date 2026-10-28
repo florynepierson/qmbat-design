@@ -194,71 +194,41 @@ section{padding:120px 64px;position:relative;z-index:1;}
 .ba-caption{padding:10px 0 2px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:300;}
 
 /* LIGHTBOX BA — slider interactif plein écran */
-.lb-ba{
-  position:fixed;inset:0;z-index:2000;
-  background:rgba(5,8,7,0.97);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity 0.3s ease;
-}
-.lb-ba.open{opacity:1;pointer-events:all;}
-.lb-ba-inner{
-  position:relative;
-  width:90vw;
-  max-width:780px;
-}
-/* image après dans la lightbox : hauteur max pour ne pas déborder */
-.lb-ba-inner .ba-after{
-  max-height:75vh;
-  width:100%;
-  height:auto;
-  object-fit:contain;
-}
-/* slider dans la lightbox */
-.lb-ba-inner .ba-wrap{cursor:ew-resize;}
-.lb-ba-caption{
-  margin-top:12px;
-  font-size:11px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--muted);text-align:center;
-}
-.lb-ba-counter{
-  position:fixed;top:24px;left:50%;transform:translateX(-50%);
-  font-size:11px;letter-spacing:3px;color:var(--muted);
-}
-.lb-ba-close{
-  position:fixed;top:20px;right:24px;
-  width:44px;height:44px;
-  background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.25);
-  border-radius:50%;color:var(--gold);font-size:20px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:background 0.3s;
-}
-.lb-ba-close:hover{background:rgba(212,168,67,0.25);}
-.lb-ba-arrow{
-  position:fixed;top:50%;transform:translateY(-50%);
-  width:52px;height:52px;
-  background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.25);
-  color:var(--gold);font-size:26px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:background 0.3s;
-}
-.lb-ba-arrow:hover{background:rgba(212,168,67,0.25);}
-.lb-ba-prev{left:16px;}
-.lb-ba-next{right:16px;}
 
+/* LIGHTBOX AVANT/APRÈS */
+.lb-ba {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(5, 8, 7, 0.97);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
 
-/* Ajuster l'affichage du comparateur dans la modale */
+.lb-ba.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
 .lb-ba-inner {
+  position: relative;
   width: 90vw;
   max-width: 900px;
-  max-height: 80vh;
-  margin: auto;
+  margin: 0 auto;
 }
 
 .lb-ba-inner .ba-wrap {
   position: relative;
-  max-width: 100%;
   margin: 0 auto;
   overflow: hidden;
   cursor: ew-resize;
   user-select: none;
+  touch-action: pan-y;
 }
 
 .lb-ba-inner .ba-after,
@@ -267,7 +237,8 @@ section{padding:120px 64px;position:relative;z-index:1;}
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  max-height: none;
+  object-fit: fill;
   object-position: center;
   display: block;
 }
@@ -277,6 +248,62 @@ section{padding:120px 64px;position:relative;z-index:1;}
   inset: 0;
   overflow: hidden;
 }
+
+.lb-ba-caption {
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.lb-ba-counter {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--muted);
+}
+
+.lb-ba-close {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  background: rgba(212, 168, 67, 0.1);
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lb-ba-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  background: rgba(212, 168, 67, 0.1);
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  color: var(--gold);
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lb-ba-prev { left: 16px; }
+.lb-ba-next { right: 16px; }
+
 
 
 /* GALERIE SIMPLE — dimensions naturelles */
@@ -1103,37 +1130,75 @@ const lbBaCounter=document.getElementById('lbBaCounter');
 let lbBaCurrent=0, lbBaSliderInited=false;
 
 
+
 function buildBASlider(data) {
   lbBaInner.innerHTML = `
     <div class="ba-wrap" id="lbBaWrap">
       <img class="ba-after" src="${data.after}" alt="Après">
+
       <div class="ba-before-clip">
         <img src="${data.before}" alt="Avant">
       </div>
+
       <div class="ba-divider"></div>
+
       <div class="ba-handle">
         <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#080B0A;">
           <path d="M8 5l-7 7 7 7V5zm8 0v14l7-7-7-7z"/>
         </svg>
       </div>
+
       <span class="ba-badge avant">${data.labelA}</span>
       <span class="ba-badge apres">${data.labelB}</span>
-    </div>`;
-  const w=document.getElementById('lbBaWrap');
-  // attend les deux images pour fixer la hauteur
-  const ia=w.querySelector('.ba-after');
-  const ib=w.querySelector('.ba-before-clip img');
-  function fixH(){
-    const width=w.offsetWidth||780;
-    const rA=ia.naturalHeight/ia.naturalWidth;
-    const rB=ib.naturalHeight/ib.naturalWidth;
-    w.style.height=Math.max(rA,rB)*width+'px';
+    </div>
+  `;
+
+  const w = document.getElementById('lbBaWrap');
+  const ia = w.querySelector('.ba-after');
+  const ib = w.querySelector('.ba-before-clip img');
+
+  let sliderInitialized = false;
+
+  function fixH() {
+    if (!ia.naturalWidth || !ib.naturalWidth) return;
+
+    const maxWidth = Math.min(
+      lbBaInner.clientWidth || window.innerWidth * 0.9,
+      900
+    );
+
+    const ratio = Math.max(
+      ia.naturalHeight / ia.naturalWidth,
+      ib.naturalHeight / ib.naturalWidth
+    );
+
+    const maxHeight = window.innerHeight * 0.70;
+    const width = Math.min(maxWidth, maxHeight / ratio);
+
+    w.style.width = width + 'px';
+    w.style.height = (width * ratio) + 'px';
+
+    if (!sliderInitialized) {
+      sliderInitialized = true;
+      initBASlider(w);
+    }
   }
-  let lc=0;
-  function onL(){lc++;if(lc>=2)fixH();}
-  if(ia.complete&&ia.naturalWidth)onL();else ia.addEventListener('load',onL);
-  if(ib.complete&&ib.naturalWidth)onL();else ib.addEventListener('load',onL);
-  initBASlider(w);
+
+  function onImageReady() {
+    if (
+      ia.complete && ia.naturalWidth &&
+      ib.complete && ib.naturalWidth
+    ) {
+      fixH();
+    }
+  }
+
+  ia.addEventListener('load', onImageReady);
+  ib.addEventListener('load', onImageReady);
+
+  onImageReady();
+
+  window.addEventListener('resize', fixH);
 }
 
 function lbBaOpen(idx){
